@@ -19,27 +19,10 @@ const gameboard = {
     initialMarker: 'X',
     secondMarker: 'O',
     nextMarker: true,
-    slot0: '',
-    slot1: '',
-    slot2: '',
-    slot3: '',
-    slot4: '',
-    slot5: '',
-    slot6: '',
-    slot7: '',
-    slot8: '',
-   
-    array: [this.slot0,this.slot1,this.slot2,this.slot3,this.slot4,this.slot5,this.slot6,this.slot7,this.slot8],
+    isGameOver : false,   
+    array: ["","","","","","","","",""],
     cleaner: () => {
-        this.slot1 = '';
-        this.slot2 = '';
-        this.slot3 = '';
-        this.slot4 = '';
-        this.slot5 = '';
-        this.slot6 = '';
-        this.slot7 = '';
-        this.slot8 = '';
-        this.slot9 = '';
+        this.array = [,,,,,,,,,];
         this.nextMarker= true;
     },
     
@@ -53,39 +36,84 @@ const gameboard = {
         }
     },
     clicker: () => {
+        if (!isGameOver) {
         const onClick = (event) => {
             const isSlot = event.target.classList.contains('slot');
             if (isSlot) {
                 let instance = event.target.id;
                 if (gameboard.instance === '') {
                     gameboard.nextMarker ? gameboard.instance=initialMarker : gameboard.instance=secondMarker;
-                    let tempSlot = document.getElementById(instance);
+                    let tempSlot = document.getElementById(i);
                     tempSlot.textContent = gameboard.nextMarker;
                 }
             }
         }
         window.addEventListener('click', onClick);
+    }
     },
 
 }
 
-gameboardArray = ["","","","","","","","",""];
+
 
 const onClick = (event) => {
     const isSlot = event.target.classList.contains('slot');
-    if (isSlot) {
+    console.log(gameboard.isGameOver);
+    if (isSlot && (gameboard.isGameOver==false)) {
+        //console.log(gameboard.array)
+        let tempI = event.target.id;
+        tempI = tempI.split('');
+        //console.log(tempI)
+        i=tempI[tempI.length -1]
+       // console.log(i);
+        i= parseInt(i);
+        //console.log(typeof i);
+        //console.log (gameboard.array[i]);
         
-        let instance = event.target.id;
-        
-        if (gameboard[instance] === '') {
-            gameboard.nextMarker ? gameboard.instance=gameboard.initialMarker : gameboard.instance=gameboard.secondMarker;
-            let tempSlot = document.getElementById(instance);
-            tempSlot.textContent = gameboard.instance;
+        if (gameboard.array[i] === '') {
+            gameboard.nextMarker ? gameboard.array[i]=gameboard.initialMarker : gameboard.array[i]=gameboard.secondMarker;
+            //console.log(gameboard.array[i])
+            //console.log(gameboard.array)
+            let tempSlot = document.getElementById("slot"+i);
+            tempSlot.textContent = gameboard.array[i];
             gameboard.nextMarker = !(gameboard.nextMarker);
+            if (victoryTest()) {
+                gameboard.isGameOver=true;
+            }
+
         }
     }
 }
 window.addEventListener('click', onClick);
+
+const victoryTest = () => {
+    let victoryArray = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]];
+    
+    let victory = false;
+   
+        victoryArray.forEach(element => {
+        let x = element[0];
+        //console.log(gameboard.array[x])
+        let y = element[1];
+        //console.log(gameboard.array[y])
+        let z = element[2];
+        //console.log(gameboard.array[z])
+        if ((gameboard.array[x]=='X' || gameboard.array[x]=='O') && gameboard.array[x]===gameboard.array[y] && gameboard.array[x]===gameboard.array[z]) {
+            victory=true;
+            let winner1 = document.getElementById("slot"+x);
+            let winner2 = document.getElementById("slot"+y);
+            let winner3 = document.getElementById("slot"+z);
+            winner1.classList.add('winner');
+            winner2.classList.add('winner');
+            winner3.classList.add('winner');
+
+        }
+    });
+        
+        //console.log(victory);
+    return victory;
+    };
+//}
 
 
 //Each time a move is registered, the gameboard checks whose turn is next and display symbols accordingly,  the gameboard checks the array to identify the winning combinations.
