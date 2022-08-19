@@ -57,8 +57,10 @@ const gameboard = {
             const isSlot = event.target.classList.contains('slot');
             if (isSlot) {
                 let instance = event.target.id;
-                if (this.instance === '') {
-                    nextMarker ? this.instance=initialMarker : this.instance=secondMarker;
+                if (gameboard.instance === '') {
+                    gameboard.nextMarker ? gameboard.instance=initialMarker : gameboard.instance=secondMarker;
+                    let tempSlot = document.getElementById(instance);
+                    tempSlot.textContent = gameboard.nextMarker;
                 }
             }
         }
@@ -69,14 +71,29 @@ const gameboard = {
 
 gameboardArray = ["","","","","","","","",""];
 
-const 
+const onClick = (event) => {
+    const isSlot = event.target.classList.contains('slot');
+    if (isSlot) {
+        
+        let instance = event.target.id;
+        
+        if (gameboard[instance] === '') {
+            gameboard.nextMarker ? gameboard.instance=gameboard.initialMarker : gameboard.instance=gameboard.secondMarker;
+            let tempSlot = document.getElementById(instance);
+            tempSlot.textContent = gameboard.instance;
+            gameboard.nextMarker = !(gameboard.nextMarker);
+        }
+    }
+}
+window.addEventListener('click', onClick);
+
 
 //Each time a move is registered, the gameboard checks whose turn is next and display symbols accordingly,  the gameboard checks the array to identify the winning combinations.
-const = gameMove () => {
+const gameMove = () => {
     gameboard.counter++;
     gameboard.display();
 //identify the slot being clicked     
-}
+};
 
 //If a win is identified, gameboard checks if its an X or O victory so the win is added to player's score. Winning slots are displayed in red.
 
