@@ -1,0 +1,65 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.container {
+    height: 700px;
+    width:500px;
+    background-color: rgb(174, 208, 252);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+.players {
+    background-color: rgb(255, 199, 199);
+    display: flex;
+    width: 450px;
+    justify-content: space-between;
+}
+.player1,
+.player2 {
+    font-size: 1.2em;
+    background-color: rgb(120, 235, 250);
+    padding: 20px;
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.score {
+    font-size: 1.5em;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+}
+.gameboard {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    width: 450px;
+    height: 450px;
+    background-image: url("./image5544.png") ;
+}
+.slot {
+    background-color: #fff;
+    width: 50%;
+    height:50%;
+    place-self: center;
+}
+#slot1{
+    grid-column: 1;
+    grid-row: 1;
+}
+.game-controls {
+    width: 450px;
+    display: flex;
+    justify-content: space-between;
+}
