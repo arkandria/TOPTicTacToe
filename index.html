@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Erica+One&family=Fredoka+One&display=swap" rel="stylesheet">
     <script src="./javascript.js" defer></script>
     <title>Document</title>
 </head>
@@ -29,9 +32,34 @@
             </div>
         
         <div class="game-controls">
-            <div class="new-game">New game</div>
-            <div class="choose-opponent">Chose opponent</div>
+            <div class="new-game" >New Game!</div>
+            
         </div>
+    </div>
+    <div class="options">
+        <div class="choose-title">Choose opponent</div>
+        <div class="chooser">
+            <div class="choose-opponent">Human</div>
+            <div class="choose-opponent">Computer</div>
+        </div>
+        <form  class="options-human">
+            <label for="player1">X Name</label>
+            <input type="text">
+            <label for="player2">O Name</label>
+            <input type="text">
+        </form>
+        <form  class="options-pc">
+            <label for="player1">Your name</label>
+            <input type="text">
+            <fieldset>
+                <legend>Select symbol</legend>
+                <input type="radio" name="radio" id="X">
+                <label class="radio-label" for="X">X</label>
+                <input type="radio" name="radio" id="O">
+                <label class="radio-label" for="O">O</label>
+            </fieldset>
+        </form>
+        <button class="start-button">Start game</button>
     </div>
 </body>
 </html>
