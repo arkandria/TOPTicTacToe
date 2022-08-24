@@ -1,11 +1,34 @@
-//When user clicks new game, a pop up will ask if the game is against another person or against computer.
+
+const playerFactory = (name,score, selection) => {
+    
+    return {name, score, selection};
+}
+
+const gameboard = (function() {
+'use strict;'
+//Gameboard variables
+
 let againstHuman = true;
-const optionsStarter = () => {
+let counter= 0;
+let initialMarker= 'X';
+let secondMarker= 'O';
+let nextMarker= true;
+let isGameOver= true;   
+let array= ["","","","","","","","",""];
+let victory;
+let xCounter = 0;
+let oCounter = 0;
+let player1;
+let player2;
+let tie = false;
+
+// Display menu options
+function optionsStarter() {
     let options = document.getElementById('options');
     options.style.display = 'flex';
 }
-//After that, the gameboard will ask the name of the player or players
-const humanOptions = () => {
+
+function humanOptions () {
     let optionsPc = document.getElementById('pcOps');
     optionsPc.style.display = "none";
     let optionsHuman = document.getElementById('humanOps');
@@ -14,7 +37,7 @@ const humanOptions = () => {
     let start = document.getElementById('start');
     start.style.display = 'block';
 }
-const pcOptions = () => {
+function pcOptions () {
     let optionsHuman = document.getElementById('humanOps');
     optionsHuman.style.display = "none";
     let optionsPc = document.getElementById('pcOps');
@@ -25,19 +48,10 @@ const pcOptions = () => {
 }
 
 //With this information, the system will create the players and will store the wins to provide a score.
-const playerFactory = (name,score, selection) => {
-    
-    return {name, score, selection};
-}
-function displayRadioValue() {
-    let el = document.getElementsByName('radio');
+
+
       
-    for(i = 0; i < el.length; i++) {
-        //if(el[i].checked)
-        //let answer = event.target.id;
-    } 
-}           
-const gameCreator = () => {
+function gameCreator () {
     if (againstHuman=== true) {
         let tempNameX = document.getElementById('playerX').value;
         let tempNameO = document.getElementById('playerO').value;
@@ -61,7 +75,7 @@ const gameCreator = () => {
 }
 
 //Both names and score are displayed
-const displayBoard = () => {
+function displayBoard () {
     let a = document.getElementById('player1');
     console.log (player1.name);
     a.firstChild.data = player1.name;
@@ -71,27 +85,8 @@ const displayBoard = () => {
 
 } 
 
-
-
-
-//We create an array where each of the nine elements represents a slot in the game.
-
-let counter= 0;
-let initialMarker= 'X';
-let secondMarker= 'O';
-let nextMarker= true;
-let isGameOver= true;   
-let array= ["","","","","","","","",""];
-let victory;
-let xCounter = 0;
-let oCounter = 0;
-let player1;
-let player2;
-let tie = false;
-
-
-
-const cleaner = () => {
+// When a new game begins, all variables are reset
+function cleaner () {
     initialMarker= 'X';
     secondMarker= 'O';
     nextMarker= true;
@@ -103,8 +98,8 @@ const cleaner = () => {
     let o = document.getElementById("O");
     o.style.display = "block";
 };
-
-const partialCleaner = () => {
+// When a round starts, gameboard is cleaned and some variables are reset
+function partialCleaner () {
     for (let i=0; i<9; i++){
         if (document.getElementById("slot"+i).firstChild.data=== "X" || document.getElementById("slot"+i).firstChild.data=== "O") {
             document.getElementById("slot"+i).firstChild.data = " ";
@@ -123,8 +118,8 @@ const partialCleaner = () => {
     tie=false;
     counter= 0;
 };
-
-const displayFinalWinner = () => {
+// Gameboard displays final winner when no adtional round is selected
+function displayFinalWinner() {
     
     if (xCounter==oCounter) {
         let container = document.getElementById("player-wins");
@@ -151,30 +146,27 @@ const displayFinalWinner = () => {
             announce.style.display = "block"; 
             announce.firstChild.data = name;
         }
-
-
-
     }    
     };
 
 
 
-
-const gameStopper =()=> {
+//prevents gameboard to continue oprerating after round ends and stores scores
+function gameStopper() {
     isGameOver=true;
     if (initialMarker==="X") {
         player1.score=xCounter;
         player2.score=oCounter; 
     } else {
         player1.score=oCounter;
-    player2.score=xCounter;
+        player2.score=xCounter;
     }
     displayBoard();
     let another = document.getElementById("another");
     another.style.display= "flex";
 };
-
-const gameHuman = () => {
+//when the game is among human players this function controls game interaction
+function gameHuman () {
     let winText = document.getElementById('winner');
     let tempI = event.target.id;
     tempI = tempI.split('');
@@ -199,7 +191,7 @@ const gameHuman = () => {
 };
 
 
-const gameMachine = () => {
+function gameMachine () {
     
     let winText = document.getElementById('winner');
     let tempI = event.target.id;
@@ -255,15 +247,15 @@ const gameMachine = () => {
     };
 };
 
-
-const hideWinner = () => {
+// Hides the winner announcement so a new game can start
+function hideWinner (){
     let container = document.getElementById("player-wins");
     container.style.display= "none";
 }
 
 
-
-const onClick = (event) => {
+// These are the controls for each clickable element in the gameboard
+function onClick (event) {
     const isSlot = event.target.classList.contains('slot');
     const isHuman = (event.target.id === 'human');
     const isPc = (event.target.id === 'pc');
@@ -314,7 +306,8 @@ const onClick = (event) => {
 };
 window.addEventListener('click', onClick);
 
-const victoryTest = () => {
+//Finds out if there is there is a winner in the gameboard.
+function victoryTest () {
     
     let victoryArray = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]];
         
@@ -337,18 +330,12 @@ const victoryTest = () => {
     });
     return victory;
     };
-//}
 
-
-//Each time a move is registered, the gameboard checks whose turn is next and display symbols accordingly,  the gameboard checks the array to identify the winning combinations.
-const gameMove = () => {
-    counter++;
-    display();
-}
+return {
+    onClick:onClick,
+    }
+})();
 
 
 
 
-//In movement number 8  a check is done to identify a possible tie.
-
-//If a computer game is chosen, we provide three modes: easy, hard and impossible.
