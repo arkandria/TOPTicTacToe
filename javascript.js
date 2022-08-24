@@ -49,8 +49,9 @@ const gameCreator = () => {
         isGameOver= false;
     } else {
         let tempName = document.getElementById('user').value;
-        player1 = playerFactory(tempName, 0, "X");
-        player2 = playerFactory("Computer", 0, "O");
+        player1 = playerFactory(tempName, 0, initialMarker);
+        player2 = playerFactory("Computer", 0, secondMarker);
+        player2 = playerFactory("Computer", 0, secondMarker);
         let options = document.getElementById('options');
         options.style.display = 'none';
         displayBoard();
@@ -97,6 +98,10 @@ const cleaner = () => {
     xCounter = 0;
     oCounter = 0;
     partialCleaner();
+    let x = document.getElementById("X");
+    x.style.display = "block";
+    let o = document.getElementById("O");
+    o.style.display = "block";
 };
 
 const partialCleaner = () => {
@@ -111,7 +116,7 @@ const partialCleaner = () => {
             red[i].classList.remove('winner');
         } 
     };
-    nextMarker ? alert("next " + initialMarker) : alert("next " + secondMarker);
+    
     array= ["","","","","","","","",""];
     isGameOver=false;
         victory = false;
@@ -120,14 +125,24 @@ const partialCleaner = () => {
 };
 
 const displayFinalWinner = () => {
-    let name = (xCounter>oCounter) ? player1.name : player2.name;
+    
     if (xCounter==oCounter) {
         let container = document.getElementById("player-wins");
         container.style.display = "flex";
         let announce = document.getElementById("tie-title");
         announce.style.display = "block";
     } else {
-        
+        if (againstHuman) {
+            let name = (player1.score>player2.score)  ? player1.name : player2.name;
+            let container = document.getElementById("player-wins");
+            container.style.display = "flex"; 
+            let winTitle = document.getElementById("win-title");
+            winTitle.style.display = "block"; 
+            let announce = document.getElementById("win-name");
+            announce.style.display = "block"; 
+            announce.firstChild.data = name;
+        } else {
+            let name = (player1.score>player2.score)  ? player1.name : player2.name;
             let container = document.getElementById("player-wins");
             container.style.display = "flex"; 
             let winTitle = document.getElementById("win-title");
@@ -137,6 +152,9 @@ const displayFinalWinner = () => {
             announce.firstChild.data = name;
         }
 
+
+
+    }    
     };
 
 
@@ -144,8 +162,13 @@ const displayFinalWinner = () => {
 
 const gameStopper =()=> {
     isGameOver=true;
-    player1.score=xCounter;
-    player2.score=oCounter;
+    if (initialMarker==="X") {
+        player1.score=xCounter;
+        player2.score=oCounter; 
+    } else {
+        player1.score=oCounter;
+    player2.score=xCounter;
+    }
     displayBoard();
     let another = document.getElementById("another");
     another.style.display= "flex";
@@ -162,6 +185,7 @@ const gameHuman = () => {
         let tempSlot = document.getElementById("slot"+i);
         tempSlot.textContent = array[i];
         nextMarker = !(nextMarker);
+        counter++
         if (victoryTest()) {
             victory==="X" ? winText.firstChild.data=player1.name : winText.firstChild.data=player2.name;
             gameStopper();
@@ -173,10 +197,7 @@ const gameHuman = () => {
         }
     };
 };
-const findRandomNum = () => {
-    let randomNum = Math.floor(Math.random() * (9 - counter));
-    return randomNum;
-}
+
 
 const gameMachine = () => {
     
@@ -186,13 +207,13 @@ const gameMachine = () => {
     i=tempI[tempI.length -1]
     i= parseInt(i);
     if (array[i] === '') {
-        nextMarker ? array[i]=initialMarker : array[i]=secondMarker;
+        array[i]=initialMarker;
         let tempSlot = document.getElementById("slot"+i);
         tempSlot.textContent = array[i];
-        nextMarker = !(nextMarker);
+        
         counter++;
         if (victoryTest()) {
-            victory==="X" ? winText.firstChild.data=player1.name : winText.firstChild.data=player2.name;
+            victory===initialMarker ? winText.firstChild.data=player1.name : winText.firstChild.data=player2.name;
             gameStopper();
         } else if (counter===9) {
             winText.firstChild.data= "Tie!";
@@ -202,18 +223,28 @@ const gameMachine = () => {
         }
     };
     
-    do {
-        findRandomNum() 
-    } while (array[random] !== '');
-    let random = findRandomNum();
-    if (array[random] === '') {
-        nextMarker ? array[random]=initialMarker : array[random]=secondMarker;
-        let tempSlot = document.getElementById("slot"+i);
-        tempSlot.textContent = array[i];
-        nextMarker = !(nextMarker);
+    if (!victoryTest()) {
+        let findRandomNum = () => {
+            let randomNum = Math.floor(Math.random() * (freeSlots.length-1));
+            return randomNum;
+        }
+        let freeSlots =[];
+        for (let i=0; i<9; i++) {
+            if (array[i]=== ""){
+                freeSlots.push(i);
+            }
+        }
+        console.log (freeSlots);
+        z = findRandomNum()
+        random = freeSlots[z]; 
+        
+        array[random]=secondMarker;
+        let tempSlot = document.getElementById("slot"+random);
+        tempSlot.textContent = array[random];
+        
         counter++;
         if (victoryTest()) {
-            victory==="X" ? winText.firstChild.data=player1.name : winText.firstChild.data=player2.name;
+            victory===initialMarker ? winText.firstChild.data=player1.name : winText.firstChild.data=player2.name;
             gameStopper();
         } else if (counter===9) {
             winText.firstChild.data= "Tie!";
@@ -221,8 +252,9 @@ const gameMachine = () => {
             
             gameStopper();
         }
+    };
 };
-}
+
 
 const hideWinner = () => {
     let container = document.getElementById("player-wins");
@@ -239,6 +271,8 @@ const onClick = (event) => {
     const isYes = ( event.target.id === 'yes');
     const isNo = (event.target.id === 'no');
     const isStartOver = (event.target.id === 'start-over');
+    const isX = (event.target.id === 'X');
+    const isO = (event.target.id === 'O');
     if (isSlot && (isGameOver==false)) {
         
         againstHuman ? gameHuman() : gameMachine();
@@ -249,7 +283,6 @@ const onClick = (event) => {
     } else if (isPc) {
         pcOptions();
     } else if (isButton){
-        cleaner();
         gameCreator();
     } else if (isYes){
         partialCleaner();
@@ -258,10 +291,25 @@ const onClick = (event) => {
         let another = document.getElementById("another");
         another.style.display= "none";
         displayFinalWinner();
+        cleaner();
     } else if (isStartOver) {
         optionsStarter();
         cleaner();
         hideWinner();
+    } else if (isX) {
+        initialMarker="X";
+        secondMarker="O"
+        
+        
+        let other = document.getElementById("O");
+        other.style.display = "none";
+    } else if (isO) {
+        initialMarker="O";
+        secondMarker="X"
+        
+        
+        let other = document.getElementById("X");
+        other.style.display = "none";
     }
 };
 window.addEventListener('click', onClick);
