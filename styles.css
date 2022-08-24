@@ -28,7 +28,8 @@ body {
 }
 .player1,
 .player2,
-.new-game {
+.new-game,
+.start-game {
     font-size: 1.2em;
     background-color: rgb(37, 37, 37);
     padding: 20px;
@@ -39,9 +40,35 @@ body {
     border-radius: 10% 5px;
     color: beige;
 }
-.new-game:hover {
+.start-game:hover {
     background-color: rgb(78, 78, 78);
 }
+.new-game {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    background-color: rgba(37, 37, 37, 0.637);
+}
+.new-round {
+    display: flex;
+    
+}
+.win-text{
+    font-size: 2em;
+    margin: 20px;
+}
+.yes,
+.no{
+    background-color: rgba(37, 37, 37, 0.637);
+    padding: 10px 25px;
+    margin: 10px;
+}
+.yes:hover,
+.no:hover{
+    background-color: rgba(78, 78, 78, 0.589);
+}
+
+
 .score {
     font-size: 1.5em;
     background-color: #fff;
@@ -90,11 +117,16 @@ body {
 .game-controls {
     width: 450px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    justify-content: space-around;
 }
 .choose-opponent {
     margin-top: 10px;
+    border-radius: 10% 5px;
+}
+.choose-opponent:hover {
+    background-color: rgb(78, 78, 78);
+    
 }
 
 .options {
@@ -129,7 +161,7 @@ body {
 .options-human, 
 .options-pc {
     padding: 40px;
-    display: flex;
+    display: none;
     flex-direction: column;
 }
 .radio-label {
@@ -146,4 +178,40 @@ label {
 button {
     font-size: 1.3em;
     padding: 10px 25px;
+}
+.start-button {
+    display:none;
+}
+
+.player-wins {
+    background-color: rgba(29, 29, 29, 0.514);
+    width: 400px;
+    height: 350px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border-radius: 30px;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.win-name,
+.win-title, 
+.tie-title {
+    font-size: 2.5em;
+    color: beige;
+    margin-bottom: 20px;
+    display: none;
+}
+
+
+
+.accept {
+    border-radius: 10px;
 }

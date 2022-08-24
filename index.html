@@ -14,43 +14,54 @@
 <body>
     <div class="container">
         <div class="players">
-            <div class="player1">Player 1</div>
-            <div class="score">Score</div>
-            <div class="player2">Player 2</div>
+            <div class="player1" id="player1">Player 1</div>
+            <div class="score" id="score">Score</div>
+            <div class="player2" id="player2">Player 2</div>
         </div>
         <div class="gameboard">
-            <div class="slot" id="slot0"></div>
-            <div class="slot" id="slot1"></div>
-            <div class="slot" id="slot2"></div>
-            <div class="slot" id="slot3"></div>
-            <div class="slot" id="slot4"></div>
-            <div class="slot" id="slot5"></div>
-            <div class="slot" id="slot6"></div>
-            <div class="slot" id="slot7"></div>
-            <div class="slot" id="slot8"></div>
+            <div class="slot" id="slot0"> </div>
+            <div class="slot" id="slot1"> </div>
+            <div class="slot" id="slot2"> </div>
+            <div class="slot" id="slot3"> </div>
+            <div class="slot" id="slot4"> </div>
+            <div class="slot" id="slot5"> </div>
+            <div class="slot" id="slot6"> </div>
+            <div class="slot" id="slot7"> </div>
+            <div class="slot" id="slot8"> </div>
             
             </div>
         
         <div class="game-controls">
-            <div class="new-game" >New Game!</div>
+            
+            <div class="start-game" id="start-over" >Start Over!</div>
             
         </div>
+
+        <div class="new-game" id="another">
+            <div class="text">This round winner is</div>
+            <div class="win-text" id="winner"> </div>
+            <div class="question">Do you want another round?</div>
+            <div class="new-round">
+                <div class="yes" id="yes" >Yes</div>
+                <div class="no" id="no">No</div>
+            </div>
+        </div>
     </div>
-    <div class="options">
+    <div class="options" id='options'>
         <div class="choose-title">Choose opponent</div>
         <div class="chooser">
-            <div class="choose-opponent">Human</div>
-            <div class="choose-opponent">Computer</div>
+            <div class="choose-opponent" id="human">Human</div>
+            <div class="choose-opponent" id="pc">Computer</div>
         </div>
-        <form  class="options-human">
-            <label for="player1">X Name</label>
-            <input type="text">
-            <label for="player2">O Name</label>
-            <input type="text">
+        <form  class="options-human" id="humanOps">
+            <label for="playerX">X Name</label>
+            <input type="text" value="Player 1" maxlength="10" id="playerX">
+            <label for="playerO">O Name</label>
+            <input type="text" value="Player 2" maxlength="10" id="playerO">
         </form>
-        <form  class="options-pc">
-            <label for="player1">Your name</label>
-            <input type="text">
+        <form  class="options-pc" id="pcOps">
+            <label for="user">Your name</label>
+            <input type="text" value="Player" maxlength="10" id="user" >
             <fieldset>
                 <legend>Select symbol</legend>
                 <input type="radio" name="radio" id="X">
@@ -59,7 +70,15 @@
                 <label class="radio-label" for="O">O</label>
             </fieldset>
         </form>
-        <button class="start-button">Start game</button>
+        <button class="start-button" id="start">Start game</button>
+    </div>
+    <div class="final">
+        <div class="player-wins" id="player-wins">
+            <div class="win-name" id="win-name"> Player 1 </div>
+            <div class="win-title" id="win-title" >WINS!</div>
+            <div class="tie-title" id="tie-title">IT WAS A TIE!</div>
+            
+        </div>
     </div>
 </body>
 </html>

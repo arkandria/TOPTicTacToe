@@ -1,116 +1,292 @@
 //When user clicks new game, a pop up will ask if the game is against another person or against computer.
 let againstHuman = true;
-
+const optionsStarter = () => {
+    let options = document.getElementById('options');
+    options.style.display = 'flex';
+}
 //After that, the gameboard will ask the name of the player or players
+const humanOptions = () => {
+    let optionsPc = document.getElementById('pcOps');
+    optionsPc.style.display = "none";
+    let optionsHuman = document.getElementById('humanOps');
+    optionsHuman.style.display = "flex";
+    againstHuman = true;
+    let start = document.getElementById('start');
+    start.style.display = 'block';
+}
+const pcOptions = () => {
+    let optionsHuman = document.getElementById('humanOps');
+    optionsHuman.style.display = "none";
+    let optionsPc = document.getElementById('pcOps');
+    optionsPc.style.display = "flex";
+    againstHuman = false;
+    let start = document.getElementById('start');
+    start.style.display = 'block';
+}
 
 //With this information, the system will create the players and will store the wins to provide a score.
+const playerFactory = (name,score, selection) => {
+    
+    return {name, score, selection};
+}
+function displayRadioValue() {
+    let el = document.getElementsByName('radio');
+      
+    for(i = 0; i < el.length; i++) {
+        //if(el[i].checked)
+        //let answer = event.target.id;
+    } 
+}           
+const gameCreator = () => {
+    if (againstHuman=== true) {
+        let tempNameX = document.getElementById('playerX').value;
+        let tempNameO = document.getElementById('playerO').value;
+        player1 = playerFactory(tempNameX, 0, "X");
+        player2 = playerFactory(tempNameO, 0, "O");
+        let options = document.getElementById('options');
+        options.style.display = 'none';
+        displayBoard();
+        isGameOver= false;
+    } else {
+        let tempName = document.getElementById('user').value;
+        player1 = playerFactory(tempName, 0, "X");
+        player2 = playerFactory("Computer", 0, "O");
+        let options = document.getElementById('options');
+        options.style.display = 'none';
+        displayBoard();
+        isGameOver= false;
+    }
+    
+}
+
+//Both names and score are displayed
+const displayBoard = () => {
+    let a = document.getElementById('player1');
+    console.log (player1.name);
+    a.firstChild.data = player1.name;
+    let b = document.getElementById('player2');
+    b.firstChild.data = player2.name;
+    document.getElementById('score').firstChild.data = `${player1.score} - ${player2.score}`
+
+} 
 
 
-
-//Both names and score are displayed in gameboard.
-
-
-//A random first player will be assigned and user can choose symbol.
 
 
 //We create an array where each of the nine elements represents a slot in the game.
-const gameboard = {
-    counter: 0,
-    initialMarker: 'X',
-    secondMarker: 'O',
-    nextMarker: true,
-    isGameOver : false,   
-    array: ["","","","","","","","",""],
-    cleaner: () => {
-        this.array = [,,,,,,,,,];
-        this.nextMarker= true;
-    },
+
+let counter= 0;
+let initialMarker= 'X';
+let secondMarker= 'O';
+let nextMarker= true;
+let isGameOver= true;   
+let array= ["","","","","","","","",""];
+let victory;
+let xCounter = 0;
+let oCounter = 0;
+let player1;
+let player2;
+let tie = false;
+
+
+
+const cleaner = () => {
+    initialMarker= 'X';
+    secondMarker= 'O';
+    nextMarker= true;
+    xCounter = 0;
+    oCounter = 0;
+    partialCleaner();
+};
+
+const partialCleaner = () => {
+    for (let i=0; i<9; i++){
+        if (document.getElementById("slot"+i).firstChild.data=== "X" || document.getElementById("slot"+i).firstChild.data=== "O") {
+            document.getElementById("slot"+i).firstChild.data = " ";
+        }
+    };
+    if (tie===false && counter>0) {
+        let red = document.querySelectorAll('.winner');
+        for (let i=0; i<red.length; i++) {
+            red[i].classList.remove('winner');
+        } 
+    };
+    nextMarker ? alert("next " + initialMarker) : alert("next " + secondMarker);
+    array= ["","","","","","","","",""];
+    isGameOver=false;
+        victory = false;
+    tie=false;
+    counter= 0;
+};
+
+const displayFinalWinner = () => {
+    let name = (xCounter>oCounter) ? player1.name : player2.name;
+    if (xCounter==oCounter) {
+        let container = document.getElementById("player-wins");
+        container.style.display = "flex";
+        let announce = document.getElementById("tie-title");
+        announce.style.display = "block";
+    } else {
+        
+            let container = document.getElementById("player-wins");
+            container.style.display = "flex"; 
+            let winTitle = document.getElementById("win-title");
+            winTitle.style.display = "block"; 
+            let announce = document.getElementById("win-name");
+            announce.style.display = "block"; 
+            announce.firstChild.data = name;
+        }
+
+    };
+
+
+
+
+const gameStopper =()=> {
+    isGameOver=true;
+    player1.score=xCounter;
+    player2.score=oCounter;
+    displayBoard();
+    let another = document.getElementById("another");
+    another.style.display= "flex";
+};
+
+const gameHuman = () => {
+    let winText = document.getElementById('winner');
+    let tempI = event.target.id;
+    tempI = tempI.split('');
+    i=tempI[tempI.length -1]
+    i= parseInt(i);
+    if (array[i] === '') {
+        nextMarker ? array[i]=initialMarker : array[i]=secondMarker;
+        let tempSlot = document.getElementById("slot"+i);
+        tempSlot.textContent = array[i];
+        nextMarker = !(nextMarker);
+        if (victoryTest()) {
+            victory==="X" ? winText.firstChild.data=player1.name : winText.firstChild.data=player2.name;
+            gameStopper();
+        } else if (counter===9) {
+            winText.firstChild.data= "Tie!";
+            tie =true;
+            
+            gameStopper();
+        }
+    };
+};
+const findRandomNum = () => {
+    let randomNum = Math.floor(Math.random() * (9 - counter));
+    return randomNum;
+}
+
+const gameMachine = () => {
     
-
-    display: () => {
-        for (i=0; i<this.array.length; i++) {
-           let temp = this.array[i] 
-           let slot = "slot"+i;
-           let slotDisplay = document.getElementById(slot);
-           slotDisplay.textContent = temp;
+    let winText = document.getElementById('winner');
+    let tempI = event.target.id;
+    tempI = tempI.split('');
+    i=tempI[tempI.length -1]
+    i= parseInt(i);
+    if (array[i] === '') {
+        nextMarker ? array[i]=initialMarker : array[i]=secondMarker;
+        let tempSlot = document.getElementById("slot"+i);
+        tempSlot.textContent = array[i];
+        nextMarker = !(nextMarker);
+        counter++;
+        if (victoryTest()) {
+            victory==="X" ? winText.firstChild.data=player1.name : winText.firstChild.data=player2.name;
+            gameStopper();
+        } else if (counter===9) {
+            winText.firstChild.data= "Tie!";
+            tie =true;
+            
+            gameStopper();
         }
-    },
-    clicker: () => {
-        if (!isGameOver) {
-        const onClick = (event) => {
-            const isSlot = event.target.classList.contains('slot');
-            if (isSlot) {
-                let instance = event.target.id;
-                if (gameboard.instance === '') {
-                    gameboard.nextMarker ? gameboard.instance=initialMarker : gameboard.instance=secondMarker;
-                    let tempSlot = document.getElementById(i);
-                    tempSlot.textContent = gameboard.nextMarker;
-                }
-            }
+    };
+    
+    do {
+        findRandomNum() 
+    } while (array[random] !== '');
+    let random = findRandomNum();
+    if (array[random] === '') {
+        nextMarker ? array[random]=initialMarker : array[random]=secondMarker;
+        let tempSlot = document.getElementById("slot"+i);
+        tempSlot.textContent = array[i];
+        nextMarker = !(nextMarker);
+        counter++;
+        if (victoryTest()) {
+            victory==="X" ? winText.firstChild.data=player1.name : winText.firstChild.data=player2.name;
+            gameStopper();
+        } else if (counter===9) {
+            winText.firstChild.data= "Tie!";
+            tie =true;
+            
+            gameStopper();
         }
-        window.addEventListener('click', onClick);
-    }
-    },
+};
+}
 
+const hideWinner = () => {
+    let container = document.getElementById("player-wins");
+    container.style.display= "none";
 }
 
 
 
 const onClick = (event) => {
     const isSlot = event.target.classList.contains('slot');
-    console.log(gameboard.isGameOver);
-    if (isSlot && (gameboard.isGameOver==false)) {
-        //console.log(gameboard.array)
-        let tempI = event.target.id;
-        tempI = tempI.split('');
-        //console.log(tempI)
-        i=tempI[tempI.length -1]
-       // console.log(i);
-        i= parseInt(i);
-        //console.log(typeof i);
-        //console.log (gameboard.array[i]);
+    const isHuman = (event.target.id === 'human');
+    const isPc = (event.target.id === 'pc');
+    const isButton = ( event.target.id === 'start');
+    const isYes = ( event.target.id === 'yes');
+    const isNo = (event.target.id === 'no');
+    const isStartOver = (event.target.id === 'start-over');
+    if (isSlot && (isGameOver==false)) {
         
-        if (gameboard.array[i] === '') {
-            gameboard.nextMarker ? gameboard.array[i]=gameboard.initialMarker : gameboard.array[i]=gameboard.secondMarker;
-            //console.log(gameboard.array[i])
-            //console.log(gameboard.array)
-            let tempSlot = document.getElementById("slot"+i);
-            tempSlot.textContent = gameboard.array[i];
-            gameboard.nextMarker = !(gameboard.nextMarker);
-            if (victoryTest()) {
-                gameboard.isGameOver=true;
-            }
-
-        }
+        againstHuman ? gameHuman() : gameMachine();
+        
+      console.log(counter);
+    } else if (isHuman) {
+        humanOptions();
+    } else if (isPc) {
+        pcOptions();
+    } else if (isButton){
+        cleaner();
+        gameCreator();
+    } else if (isYes){
+        partialCleaner();
+        another.style.display= "none";
+    } else if (isNo) {
+        let another = document.getElementById("another");
+        another.style.display= "none";
+        displayFinalWinner();
+    } else if (isStartOver) {
+        optionsStarter();
+        cleaner();
+        hideWinner();
     }
-}
+};
 window.addEventListener('click', onClick);
 
 const victoryTest = () => {
-    let victoryArray = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]];
     
-    let victory = false;
-   
+    let victoryArray = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]];
+        
         victoryArray.forEach(element => {
         let x = element[0];
-        //console.log(gameboard.array[x])
         let y = element[1];
-        //console.log(gameboard.array[y])
         let z = element[2];
-        //console.log(gameboard.array[z])
-        if ((gameboard.array[x]=='X' || gameboard.array[x]=='O') && gameboard.array[x]===gameboard.array[y] && gameboard.array[x]===gameboard.array[z]) {
-            victory=true;
+        if ((array[x]=='X' || array[x]=='O') && array[x]===array[y] && array[x]===array[z]) {
+            victory = array[x];
             let winner1 = document.getElementById("slot"+x);
             let winner2 = document.getElementById("slot"+y);
             let winner3 = document.getElementById("slot"+z);
             winner1.classList.add('winner');
             winner2.classList.add('winner');
             winner3.classList.add('winner');
-
-        }
+            //If a win is identified, gameboard checks if its an X or O victory so the win is added to player's score. Winning slots are displayed in red.
+            (victory === 'X') ? xCounter++ : oCounter++; 
+            
+        } 
     });
-        
-        //console.log(victory);
     return victory;
     };
 //}
@@ -118,12 +294,12 @@ const victoryTest = () => {
 
 //Each time a move is registered, the gameboard checks whose turn is next and display symbols accordingly,  the gameboard checks the array to identify the winning combinations.
 const gameMove = () => {
-    gameboard.counter++;
-    gameboard.display();
-//identify the slot being clicked     
-};
+    counter++;
+    display();
+}
 
-//If a win is identified, gameboard checks if its an X or O victory so the win is added to player's score. Winning slots are displayed in red.
+
+
 
 //In movement number 8  a check is done to identify a possible tie.
 
